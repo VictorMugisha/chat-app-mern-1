@@ -1,0 +1,17 @@
+{
+  "name": "chat-app-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.5.4",
+    "express": "^4.19.2"
+  }
+}
