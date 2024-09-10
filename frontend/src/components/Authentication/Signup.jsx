@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Button,
   FormControl,
@@ -39,7 +40,7 @@ export default function Signup() {
         <FormLabel>Email</FormLabel>
         <Input
           placeholder="Enter Your Email"
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </FormControl>
 
@@ -49,7 +50,7 @@ export default function Signup() {
           <Input
             type={show ? "text" : "password"}
             placeholder="Enter Your Password"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -65,7 +66,7 @@ export default function Signup() {
           <Input
             type={show ? "text" : "password"}
             placeholder="Confirm Password"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
