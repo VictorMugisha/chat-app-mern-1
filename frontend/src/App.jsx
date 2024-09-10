@@ -5,8 +5,8 @@ import ChatPage from "./pages/ChatPage";
 export default function App() {
   return (
     <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/chats" element={<ChatPage />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/chats" element={<ChatPage />} />
     </Routes>
   );
 }
