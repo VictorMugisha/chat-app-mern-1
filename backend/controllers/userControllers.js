@@ -1,6 +1,7 @@
 const expressAsyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
+const { userInfo } = require("node:os");
 
 const registerUser = expressAsyncHandler(async (req, res) => {
   const { name, email, password, picture } = req.body;
