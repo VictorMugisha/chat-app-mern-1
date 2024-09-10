@@ -10,6 +10,8 @@ connectDB();
 const PORT = process.env.PORT || 3000
 const app = express();
 
+app.use(express.json());
+
 app.get("/api/chat", (req, res) => {
   res.status(200).json(chats);
 });
@@ -20,7 +22,7 @@ app.get("/api/chat/:id", (req, res) => {
     res.send(singleChat)
 });
 
-app.use("/api/user", userRoute);
+app.use("/api/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`.yellow.bold);
