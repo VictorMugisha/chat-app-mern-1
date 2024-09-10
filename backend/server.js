@@ -1,13 +1,10 @@
 const express = require("express");
 const chats = require("./data/data.js");
 const dotenv = require("dotenv");
-const cors = require("cors");
 
 dotenv.config();
 const PORT = process.env.PORT || 3000
 const app = express();
-
-app.use(cors());
 
 app.get("/api/chat", (req, res) => {
   res.status(200).json(chats);
