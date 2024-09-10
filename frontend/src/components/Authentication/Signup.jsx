@@ -6,6 +6,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -17,12 +18,57 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [picture, setPicture] = useState("");
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const toast = useToast();
 
   function handleClick() {
     setShow(!show);
   }
 
-  function postDetails() {}
+  function postDetails() {
+    setLoading(true);
+    if (picture === undefined) {
+      toast({
+        title: "Please Select an Image",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+
+    if (picture.type === "image/jpeg" || picture.type === "image/png") {
+      const data = new FormData();
+      data.append("file", picture);
+      data.append("upload_preset", "victor-chat-app");
+      data.append("cloud_name", "dgyh1hmco");
+
+      fetch("https://api.cloudinary.com/v1_1/victormugisha/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setPicture(data.url.toString());
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    } else {
+      toast({
+        title: "Please Select an Image",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+  }
 
   function submitHandler() {}
 
@@ -91,7 +137,7 @@ export default function Signup() {
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
-        // isLoading={picLoading}
+        isLoading={loading}
       >
         Sign Up
       </Button>
