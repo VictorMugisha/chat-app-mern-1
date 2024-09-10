@@ -19,5 +19,11 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.pre("save", async function (next) {
+  if (!this.modified) {
+    next();
+  }
+});
+
 const User = mongoose.model("User", userSchema);
 module.exports = User;
