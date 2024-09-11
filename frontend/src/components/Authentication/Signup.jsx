@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Button,
   FormControl,
@@ -10,6 +9,9 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import axios from "axios";
+// import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -19,6 +21,8 @@ export default function Signup() {
   const [picture, setPicture] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  // const history = useHistory();
+  const navigate = useNavigate();
 
   const toast = useToast();
 
@@ -36,7 +40,7 @@ export default function Signup() {
         isClosable: true,
         position: "bottom",
       });
-      setLoading(false); 
+      setLoading(false);
       return;
     }
 
@@ -44,9 +48,9 @@ export default function Signup() {
       const data = new FormData();
       data.append("file", file);
       data.append("upload_preset", "victor-chat-app");
-      data.append("cloud_name", "dgyh1hmco");
+      data.append("cloud_name", "victormugisha");
 
-      console.log("Saving image on cloudinary...")
+      console.log("Saving image on cloudinary...");
 
       fetch("https://api.cloudinary.com/v1_1/victormugisha/image/upload", {
         method: "post",
@@ -55,12 +59,20 @@ export default function Signup() {
         .then((res) => res.json())
         .then((data) => {
           setPicture(data.url.toString());
-          console.log("Image saved on cloudinary: ", data.url)
+          console.log("Image saved on cloudinary: ", data.url);
           setLoading(false);
         })
         .catch((err) => {
           console.log(err);
-          console.log("Error saving image!")
+          console.log("Error saving image!");
+          toast({
+            title: "Image Upload Failed",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom",
+          });
+          setPicture("");
           setLoading(false);
         });
     } else {
@@ -75,7 +87,76 @@ export default function Signup() {
     }
   }
 
-  function submitHandler() {}
+  async function submitHandler() {
+    setLoading(true);
+
+    if (!name || !email || !password || !confirmPassword) {
+      toast({
+        title: "Please Fill all the Feilds",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords Do Not Match",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        "/api/user",
+        {
+          name,
+          email,
+          password,
+          picture,
+        },
+        config
+      );
+
+      toast({
+        title: "Registration Successful",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+      // history.push("/chats");
+      navigate("/chats", { replace: true });
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  }
 
   return (
     <VStack spacing="5px" color="black">
