@@ -26,9 +26,9 @@ export default function Signup() {
     setShow(!show);
   }
 
-  function postDetails() {
+  function postDetails(file) {
     setLoading(true);
-    if (picture === undefined) {
+    if (file === undefined) {
       toast({
         title: "Please Select an Image",
         status: "warning",
@@ -36,14 +36,17 @@ export default function Signup() {
         isClosable: true,
         position: "bottom",
       });
+      setLoading(false); 
       return;
     }
 
-    if (picture.type === "image/jpeg" || picture.type === "image/png") {
+    if (file.type === "image/jpeg" || file.type === "image/png") {
       const data = new FormData();
-      data.append("file", picture);
+      data.append("file", file);
       data.append("upload_preset", "victor-chat-app");
       data.append("cloud_name", "dgyh1hmco");
+
+      console.log("Saving image on cloudinary...")
 
       fetch("https://api.cloudinary.com/v1_1/victormugisha/image/upload", {
         method: "post",
@@ -52,10 +55,12 @@ export default function Signup() {
         .then((res) => res.json())
         .then((data) => {
           setPicture(data.url.toString());
+          console.log("Image saved on cloudinary: ", data.url)
           setLoading(false);
         })
         .catch((err) => {
           console.log(err);
+          console.log("Error saving image!")
           setLoading(false);
         });
     } else {
@@ -66,7 +71,7 @@ export default function Signup() {
         isClosable: true,
         position: "bottom",
       });
-      return;
+      setLoading(false);
     }
   }
 
@@ -82,7 +87,7 @@ export default function Signup() {
         />
       </FormControl>
 
-      <FormControl isRequired id="email">
+      <FormControl isRequired id="email-input">
         <FormLabel>Email</FormLabel>
         <Input
           placeholder="Enter Your Email"
@@ -90,7 +95,7 @@ export default function Signup() {
         />
       </FormControl>
 
-      <FormControl isRequired id="password">
+      <FormControl isRequired id="password-input">
         <FormLabel>Password</FormLabel>
         <InputGroup>
           <Input
